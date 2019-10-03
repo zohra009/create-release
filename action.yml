@@ -1,20 +1,18 @@
-name: majkrzak/create-release
+name: Andrew-Kulpa/create-release
 description: |
-  Github Action for handling release creation
-author: Piotr Majkrzak
+  Github Action for Uploading Release Artifacts
+author: Andrew Kulpa
 branding:
-  icon: box
+  icon: package
   color: green
 inputs:
-  token:
+  tag: #There are two steps required to use this action:
+  # - create an action inside your repo by creating a file .github/workflows/release.yml 
+  # - That is where your action will be invoked.
+  # The Second is to  make certain your binary artifacts are generated.
+  # - You can do this by adding a project-specific .github/build script.
+
     required: true
-  name:
-    required: true
-  code:
-    required: true
-<<<<<<< HEAD
-  body:
-=======
   name: #Uploading Artifacts
     default: ''
   body: # Action performs 2 steps:
@@ -22,14 +20,35 @@ inputs:
         # -Upload the artifacts
         # You can continue to work and add script 
         #.github/build to your repository, and configure this action with a pattern of files to upload.
->>>>>>> ced0b98... body
     default: ""
-  prerelease:
+  prerelease: # Must pass at least one argument, to the file you would like to attach. 
+              #You must also include the GITHUB_TOKEN secret otherwise uploding will not work. 
     default: false
-  recreate:
+  overwrite: #Using goreleaser --skip-validate allows to have rolling releases and publish a new binary or docker container under the last tag version. However, when goreleaser attempts to publish the artefacts on Github, it throws this error:
+              #release failed after 49.31s error=POST https://uploads.github.com/repos/foo/bar/releases/96914
     default: false
-  assets:
-    defailt: ""
+  artifacts: #This repository contains a simple GitHub Action implementation, which allows you to attach binaries to a new (github) release of your repository
+            
+    default: ""
+  artifact: #In the top right corner of a workflow run, once the run is over, 
+            #if you used this action, there will be a Artifacts dropdown which you can download items from.
+            #steps:
+#- uses: actions/checkout@v1
+
+#- run: mkdir -p path/to/artifact
+
+#- run: echo hello > path/to/artifact/world.txt
+
+#- uses: actions/upload-artifact@master
+  #with:
+    #name: my-artifact
+    #path: path/to/artifact
+    
+default: ''
+env:
+  GITHUB_TOKEN: 'Github Auth Token'
 runs:
   using: node12
-  main: action.js
+  main: lib/main/main.js
+
+#git cherry-pick cab9608..7a1118b
